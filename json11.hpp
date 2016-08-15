@@ -55,6 +55,7 @@
 #include <map>
 #include <memory>
 #include <initializer_list>
+#include <cstdint>
 
 #ifdef _MSC_VER
     #if _MSC_VER <= 1800 // VS 2013
@@ -76,6 +77,8 @@ enum JsonParse {
 
 class JsonValue;
 
+using int64_ = int64_t;
+
 class Json final {
 public:
     // Types
@@ -91,7 +94,8 @@ public:
     Json() noexcept;                // NUL
     Json(std::nullptr_t) noexcept;  // NUL
     Json(double value);             // NUMBER
-    Json(int value);                // NUMBER
+    Json(int value);             // NUMBER
+    Json(int64_ value);             // NUMBER
     Json(bool value);               // BOOL
     Json(const std::string &value); // STRING
     Json(std::string &&value);      // STRING
@@ -133,10 +137,11 @@ public:
     bool is_object() const { return type() == OBJECT; }
 
     // Return the enclosed value if this is a number, 0 otherwise. Note that json11 does not
-    // distinguish between integer and non-integer numbers - number_value() and int_value()
+    // distinguish between integer and non-integer numbers - number_value() and int64_value()
     // can both be applied to a NUMBER-typed object.
     double number_value() const;
     int int_value() const;
+    int64_ int64_value() const;
 
     // Return the enclosed value if this is a boolean, false otherwise.
     bool bool_value() const;
@@ -213,6 +218,7 @@ class JsonValue {
 protected:
     friend class Json;
     friend class JsonInt;
+    friend class JsonInt64;
     friend class JsonDouble;
     virtual Json::Type type() const = 0;
     virtual bool equals(const JsonValue * other) const = 0;
@@ -220,6 +226,7 @@ protected:
     virtual void dump(std::string &out) const = 0;
     virtual double number_value() const;
     virtual int int_value() const;
+    virtual int64_ int64_value() const;
     virtual bool bool_value() const;
     virtual const std::string &string_value() const;
     virtual const Json::array &array_items() const;

@@ -59,6 +59,28 @@ CHECK_TRAIT(is_nothrow_move_assignable<Json>);
 CHECK_TRAIT(is_nothrow_destructible<Json>);
 
 JSON11_TEST_CASE(json11_test) {
+
+    std::cout << "int int64 test" << std::endl;
+
+    const string str_it = R"({"message_id":105308320612483198,"msg_type":3,"order":0,
+            "ques_id":0,"session_id":105308187502051928,"site_id":122062,
+            "timestamp":1471140271,
+            "visitor_id":9941658010949867158,"worker_id":133746})";
+    string err_it;
+    auto json_it = Json::parse(str_it, err_it);
+
+    assert(json_it["message_id"].int64_value() == 105308320612483198);
+    assert(json_it["message_id"].int_value() != 105308320612483198);
+    assert(json_it["msg_type"].int64_value() == 3);
+    assert(json_it["msg_type"].int_value() == 3);
+    assert(json_it["order"].int64_value() == 0);
+    assert(json_it["session_id"].int64_value() == 105308187502051928);
+    assert(json_it["site_id"].int_value() == 122062);
+    assert(json_it["site_id"].int64_value() == 122062);
+    std::cout << (unsigned long long)json_it["visitor_id"].int64_value() << std::endl;
+    assert((unsigned long long)(json_it["visitor_id"].int64_value()) == 9941658010949867158);
+    std::cout << "int int64 test passed!" << std::endl;
+
     const string simple_test =
         R"({"k1":"v1", "k2":42, "k3":["a",123,true,false,null]})";
 
