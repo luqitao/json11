@@ -41,6 +41,8 @@
 #include <algorithm>
 #include <type_traits>
 
+#include <climits>
+
 // Insert user-defined prefix code (includes, function declarations, etc)
 // to set up a custom test suite
 JSON11_TEST_CPP_PREFIX_CODE
@@ -70,16 +72,37 @@ JSON11_TEST_CASE(json11_test) {
     auto json_it = Json::parse(str_it, err_it);
 
     assert(json_it["message_id"].int64_value() == 105308320612483198);
-    assert(json_it["message_id"].int_value() != 105308320612483198);
+    assert(json_it["message_id"].uint64_value() == 105308320612483198);
     assert(json_it["msg_type"].int64_value() == 3);
-    assert(json_it["msg_type"].int_value() == 3);
+    assert(json_it["msg_type"].uint64_value() == 3);
     assert(json_it["order"].int64_value() == 0);
     assert(json_it["session_id"].int64_value() == 105308187502051928);
-    assert(json_it["site_id"].int_value() == 122062);
     assert(json_it["site_id"].int64_value() == 122062);
-    std::cout << (unsigned long long)json_it["visitor_id"].int64_value() << std::endl;
+    assert(json_it["site_id"].int64_value() == 122062);
+    std::cout << (signed long long)json_it["visitor_id"].int64_value() << std::endl;
     assert((unsigned long long)(json_it["visitor_id"].int64_value()) == 9941658010949867158);
     std::cout << "int int64 test passed!" << std::endl;
+
+    std::cout << "uint uint64 test" << std::endl;
+    const string str_it2 = R"({"int_max":2147483647,"int_min":-2147483648,"uint_max":4294967295, "uint_min":0,
+                                 "i64_max":9223372036854775807,"i64_min":-9223372036854775808,"ui64_max":18446744073709551615, "ui_64min":0 })";
+    auto json_uit = Json::parse(str_it2, err_it);
+    std::cout << "ORIGIN:" << str_it2 << std::endl;
+    string str_it2_ret;
+    json_uit.dump(str_it2_ret);
+    std::cout << "DUMP:" << str_it2_ret << std::endl;
+
+    assert(json_uit["int_max"].int64_value() == INT_MAX);
+    assert(json_uit["int_min"].int64_value() == INT_MIN);
+    assert(json_uit["uint_max"].uint64_value() == UINT_MAX);
+    assert(json_uit["uint_min"].uint64_value() == 0);
+
+    assert(json_uit["i64_max"].int64_value() == LLONG_MAX);
+    assert(json_uit["i64_min"].int64_value() == LLONG_MIN);
+    assert(json_uit["ui64_max"].uint64_value() == ULLONG_MAX);
+    assert(json_uit["ui64_min"].uint64_value() == 0);
+
+    std::cout << "int64 uint64 test passed!" << std::endl;
 
     const string simple_test =
         R"({"k1":"v1", "k2":42, "k3":["a",123,true,false,null]})";
