@@ -1,6 +1,29 @@
 json11
 ------
 
+#### modified
+The original json11 from Dropbox doesnot support integer more than 2^54 for the compatible with javascript cases. But in most development cases, int64_t and uint64_t are very important types. So modified to support these ones.
+
+    std::cout << "uint uint64 test" << std::endl;
+    const string str_it2 = R"({"int_max":2147483647,"int_min":-2147483648,"uint_max":4294967295, "uint_min":0, "i64_max":9223372036854775807,"i64_min":-9223372036854775808,"ui64_max":18446744073709551615, "ui_64min":0 })";
+    auto json_uit = Json::parse(str_it2, err_it);
+    std::cout << "ORIGIN:" << str_it2 << std::endl;
+    string str_it2_ret;
+    json_uit.dump(str_it2_ret);
+    std::cout << "DUMP:" << str_it2_ret << std::endl;
+
+    assert(json_uit["int_max"].int64_value() == INT_MAX);
+    assert(json_uit["int_min"].int64_value() == INT_MIN);
+    assert(json_uit["uint_max"].uint64_value() == UINT_MAX);
+    assert(json_uit["uint_min"].uint64_value() == 0);
+
+    assert(json_uit["i64_max"].int64_value() == LLONG_MAX);
+    assert(json_uit["i64_min"].int64_value() == LLONG_MIN);
+    assert(json_uit["ui64_max"].uint64_value() == ULLONG_MAX);
+    assert(json_uit["ui64_min"].uint64_value() == 0);
+
+#### end
+
 json11 is a tiny JSON library for C++11, providing JSON parsing and serialization.
 
 The core object provided by the library is json11::Json. A Json object represents any JSON
