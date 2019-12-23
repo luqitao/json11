@@ -80,7 +80,7 @@ JSON11_TEST_CASE(json11_test) {
     assert(json_it["site_id"].int64_value() == 122062);
     assert(json_it["site_id"].int64_value() == 122062);
     std::cout << (signed long long)json_it["visitor_id"].int64_value() << std::endl;
-    assert((unsigned long long)(json_it["visitor_id"].int64_value()) == 9941658010949867158);
+    assert((unsigned long long)(json_it["visitor_id"].int64_value()) == 9941658010949867158ull);
     std::cout << "int int64 test passed!" << std::endl;
 
     std::cout << "uint uint64 test" << std::endl;
