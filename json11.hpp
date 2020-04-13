@@ -163,6 +163,11 @@ public:
     // Return a reference to obj[key] if this is an object, Json() otherwise.
     const Json & operator[](const std::string &key) const;
 
+    // Set array item if this is an array, return Json() otherwise.
+    const Json & set(size_t i, Json value);
+    // Set object item if this is an object, return Json() otherwise.
+    const Json & set(const std::string &key, Json value);
+
     // Serialize.
     void dump(std::string &out) const;
     std::string dump() const {
@@ -239,6 +244,8 @@ protected:
     virtual const Json &operator[](size_t i) const;
     virtual const Json::object &object_items() const;
     virtual const Json &operator[](const std::string &key) const;
+    virtual const Json & set(size_t i, Json value);
+    virtual const Json & set(const std::string &key, Json value);
     virtual ~JsonValue() {}
 };
 
