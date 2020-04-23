@@ -206,6 +206,9 @@ public:
 
 class JsonString final : public Value<Json::STRING, string> {
     const string &string_value() const override { return m_value; }
+    double number_value() const override { size_t pos = 0; double v = std::stod(m_value, &pos); if (pos < m_value.length()) { v = 0; } return v; }
+    int64_ int64_value() const override { size_t pos = 0; int64_ v = std::stoll(m_value, &pos); if (pos < m_value.length()) { v = 0; } return v; }
+    uint64_ uint64_value() const override { size_t pos = 0; uint64_ v = std::stoull(m_value, &pos); if (pos < m_value.length()) { v = 0; } return v; }
 public:
     explicit JsonString(const string &value) : Value(value) {}
     explicit JsonString(string &&value)      : Value(move(value)) {}
